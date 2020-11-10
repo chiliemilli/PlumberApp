@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
 
 public class OrderActivity extends AppCompatActivity {
@@ -20,17 +22,28 @@ public class OrderActivity extends AppCompatActivity {
     private boolean running;
     private Button btnStart;
     private Button btnEnd;
+    private int tempFlag=1;
+    TextView tvOrderText, tvTime, tvTimeText, tvOrderInfoText, tvNoOrdersText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+       tvNoOrdersText=(TextView)findViewById(R.id.tvNoOrdersText);
+       tvTime=(TextView)findViewById(R.id.tvTime);
+       tvTimeText=(TextView)findViewById(R.id.tvTimeText);
+       tvOrderText=(TextView)findViewById(R.id.tvOrderText);
+       tvOrderInfoText=(TextView)findViewById(R.id.tvOrderInfoText);
+
         if (savedInstanceState !=null){
             seconds=savedInstanceState.getInt("seconds");
             running=savedInstanceState.getBoolean("running");
         }
         runTimer();
+
 
         btnStart=(Button)findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
@@ -46,9 +59,32 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                running=false;
-
+               tempFlag=0;
+               refreshScreen();
             }
         });
+
+        refreshScreen();
+    }
+
+    public void refreshScreen(){
+
+        if (tempFlag==1){
+            tvNoOrdersText.setVisibility(View.INVISIBLE);
+
+        }
+        else if (tempFlag==0) {
+            tvNoOrdersText.setVisibility(View.VISIBLE);
+            tvOrderText.setVisibility(View.INVISIBLE);
+            tvOrderInfoText.setVisibility(View.INVISIBLE);
+            tvTimeText.setVisibility(View.INVISIBLE);
+            tvTime.setVisibility(View.INVISIBLE);
+            btnStart.setVisibility(View.INVISIBLE);
+            btnEnd.setVisibility(View.INVISIBLE);
+        }
+
+
+
     }
 
     @Override

@@ -33,4 +33,5 @@ public class WelcomeActivity extends AppCompatActivity {
         thread.start();
 
     }
+
 }
