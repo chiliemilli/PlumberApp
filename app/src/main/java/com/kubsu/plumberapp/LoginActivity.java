@@ -41,21 +41,22 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                restAPIRequester.getOrderInfoByLogin(LoginActivity.this, etUsername.getText().toString(), etPassword.getText().toString(), new VolleyRestAPIRequester.OrderInfoByLoginResponse() {
+                restAPIRequester.getOrderInfoByLogin(LoginActivity.this, etUsername.getText().toString(), etPassword.getText().toString(), new VolleyRestAPIRequester.OrderInfoCallback() {
                     @Override
                     public void onError(String message) {
-                        Toast.makeText(LoginActivity.this, "Something wrong", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Error click", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onResponse(OrderInfoModel orderInfoModel) {
-                        Intent intent=new Intent();
+
+                        Intent intent=new Intent(LoginActivity.this,OrderActivity.class);
                         intent.putExtra(OrderInfoModel.class.getSimpleName(),orderInfoModel);
                         startActivity(intent);
+                        finish();
                     }
                 });
-                Toast.makeText(LoginActivity.this, "ONCLICK", Toast.LENGTH_SHORT).show();
+
             }
         });
 

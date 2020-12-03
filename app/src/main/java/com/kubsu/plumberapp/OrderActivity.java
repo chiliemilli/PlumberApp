@@ -61,6 +61,7 @@ public class OrderActivity extends AppCompatActivity {
             public void onClick(View v) {
                 running = true;
                 btnStart.setEnabled(false);
+
             }
         });
 
@@ -79,9 +80,8 @@ public class OrderActivity extends AppCompatActivity {
         if(arguments!=null){
             currentOrder = (OrderInfoModel) arguments.getSerializable(OrderInfoModel.class.getSimpleName());
             tvOrderInfo.setText(currentOrder.toString());
-
-
         }
+
     }
 
 

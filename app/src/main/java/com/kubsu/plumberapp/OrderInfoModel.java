@@ -15,7 +15,7 @@ class OrderInfoModel implements Serializable {
     private String orderType;
     private String orderDescription;
     private String orderAddress;
-    private String phoneNumber;
+    private Long phoneNumber;
     private String orderPrice;
     private int orderId;
     private boolean noOrder;
@@ -65,6 +65,15 @@ class OrderInfoModel implements Serializable {
         this.orderType = orderType;
     }
 
+    @Override
+    public String toString() {
+        return  "Тип заказа: " + orderType  +"\n"+
+                "Описание заказа: " + orderDescription + "\n"+
+                "Адрес заказчика: " + orderAddress + "\n"+
+                "Тел. номер заказчика: " + phoneNumber +"\n"+
+                "Стоимость: " + orderPrice ;
+    }
+
     public String getOrderDescription() {
         return orderDescription;
     }
@@ -81,11 +90,11 @@ class OrderInfoModel implements Serializable {
         this.orderAddress = address;
     }
 
-    public String getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

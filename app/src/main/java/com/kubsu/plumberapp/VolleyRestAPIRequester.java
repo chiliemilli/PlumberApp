@@ -1,17 +1,13 @@
 package com.kubsu.plumberapp;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,85 +22,61 @@ class VolleyRestAPIRequester {
 
 
     private static final String TAG="error";
+    public static final String QUERY_FOR_PLUMBER_ENTRY ="http://10.0.0.10:8080/Plumbers?task=auth&mode=2&login=";
 
-    public interface OrderInfoByLoginResponse {
+
+
+    public interface OrderInfoCallback {
         void onError(String message);
-
         void onResponse(OrderInfoModel orderInfoModel);
+
     }
 
+    //Plumber's entry
+    public void getOrderInfoByLogin(final Context context, final String login, final String password, final OrderInfoCallback orderInfoCallback){
 
+        String url=QUERY_FOR_PLUMBER_ENTRY+login+"&password="+password;
+       final  OrderInfoModel currentOrder=new OrderInfoModel();
 
-    public static final String QUERY_FOR_PLUMBER_ENTRY ="http://10.0.0.10:8080/Plumbers?";
-
-    public void getOrderInfoByLogin(final Context context, final String login, final String password, final OrderInfoByLoginResponse orderInfoByLoginResponse){
-
-        final OrderInfoModel orderInfoModel=new OrderInfoModel();
-        String url="http://10.0.0.10:8080/Plumbers?task=auth&mode=1&login="+login+"&password="+password;
-
-        JsonObjectRequest request= new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
+        StringRequest request= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-
-                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+            public void onResponse(String response) {
 
                 try {
-                    if (response.optString("ID").equals(1)){
+                    JSONObject jsonObject = new JSONObject(response);
 
-                        JSONObject orderJson=response.getJSONObject("order_info");
+                        JSONObject orderInfoJSON=jsonObject.getJSONObject("order_info");
+                        JSONArray orderInfoList=orderInfoJSON.getJSONArray("data");
+                        JSONObject currentOrderJSON=(JSONObject) orderInfoList.get(0);
 
-                        JSONArray orderInfoList=orderJson.getJSONArray("data");
-                        Toast.makeText(context, orderInfoList.toString(), Toast.LENGTH_SHORT).show();
-                        // OrderInfoModel currentOrder=new OrderInfoModel();
-                        JSONObject currentOrderJSON=(JSONObject) orderInfoList.get(1) ;
+                        currentOrder.setOrderId(currentOrderJSON.getInt("ORDER_INFO_ID"));
+                        currentOrder.setOrderType(currentOrderJSON.getString("ORDER_TYPE"));
+                        currentOrder.setOrderDescription(currentOrderJSON.getString("ORDER_DESCRIPTION"));
+                        currentOrder.setOrderPrice(currentOrderJSON.getString("ORDER_PRICE"));
+                        currentOrder.setPhoneNumber(currentOrderJSON.getLong("CUSTOMER_PHONE"));
+                        currentOrder.setOrderAddress(currentOrderJSON.getString("CUSTOMER_ADDRESS"));
+                        orderInfoCallback.onResponse(currentOrder);
 
-                        orderInfoModel.setOrderId(currentOrderJSON.getInt("order_id"));
-                        orderInfoModel.setOrderType(currentOrderJSON.getString("order_type"));
-                        orderInfoModel.setOrderDescription(currentOrderJSON.getString("order_description"));
-                        orderInfoModel.setOrderPrice(currentOrderJSON.getString("order_price"));
-                        orderInfoModel.setPhoneNumber(currentOrderJSON.getString("customer_phone"));
-                        orderInfoModel.setOrderAddress(currentOrderJSON.getString("customer_address"));
-
-                        orderInfoByLoginResponse.onResponse(orderInfoModel);
-
-                    }
-                    if (response.optString("order_id").equals(0)){
-                        orderInfoModel.setNoOrder(true);
-                    }
                 }catch (JSONException e){
                     e.printStackTrace();
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
 
             }
-    })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-               // super.getParams();
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("task", "auth");
-                params.put("mode","2");
-                params.put("login", login);
-                params.put("password", password);
-
-                return params;
-            }
-        };
+    });
 
         MySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 
 
-    //REGISTRATION
+
+
+    //Plumber's regiastration
     public void registrationRequest(final Context context, final String login, final String password){
 
         List<OrderInfoModel> orderInfoModel=new ArrayList<>();
