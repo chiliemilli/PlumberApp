@@ -21,11 +21,13 @@ public class WelcomeActivity extends AppCompatActivity {
                 {
                     try {
                         sleep(3000);
+                        //onDestroy();
                     } catch (Exception e) {
                         e.printStackTrace();
                     } finally {
                         Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }
             }

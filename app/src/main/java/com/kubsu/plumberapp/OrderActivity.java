@@ -1,29 +1,40 @@
 package com.kubsu.plumberapp;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 
 public class OrderActivity extends AppCompatActivity {
 
-
+    private Toolbar toolbar;
     private int seconds=0;
     private boolean running;
     private Button btnStart;
     private Button btnEnd;
-    private int tempFlag=1;
-    TextView tvOrderText, tvTime, tvTimeText, tvOrderInfoText, tvNoOrdersText;
+    TextView tvOrderInfo;
+    TextView  tvTime, tvTimeText;
 
 
 
@@ -32,60 +43,48 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-       tvNoOrdersText=(TextView)findViewById(R.id.tvNoOrdersText);
-       tvTime=(TextView)findViewById(R.id.tvTime);
-       tvTimeText=(TextView)findViewById(R.id.tvTimeText);
-       tvOrderText=(TextView)findViewById(R.id.tvOrderText);
-       tvOrderInfoText=(TextView)findViewById(R.id.tvOrderInfoText);
+        tvTime = (TextView) findViewById(R.id.tvTime);
+        tvTimeText = (TextView) findViewById(R.id.tvTimeText);
+        tvOrderInfo = findViewById(R.id.tvOrderInfo);
+        toolbar = findViewById(R.id.my_toolbar);
 
-        if (savedInstanceState !=null){
-            seconds=savedInstanceState.getInt("seconds");
-            running=savedInstanceState.getBoolean("running");
+        if (savedInstanceState != null) {
+            seconds = savedInstanceState.getInt("seconds");
+            running = savedInstanceState.getBoolean("running");
         }
         runTimer();
 
 
-        btnStart=(Button)findViewById(R.id.btnStart);
+        btnStart = (Button) findViewById(R.id.btnStart);
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                running=true;
+                running = true;
                 btnStart.setEnabled(false);
             }
         });
 
-        btnEnd=(Button)findViewById(R.id.btnEnd);
+        btnEnd = (Button) findViewById(R.id.btnEnd);
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               running=false;
-               tempFlag=0;
-               refreshScreen();
+                running = false;
+
+
             }
         });
 
-        refreshScreen();
-    }
+        Bundle arguments = getIntent().getExtras();
+        final OrderInfoModel currentOrder;
+        if(arguments!=null){
+            currentOrder = (OrderInfoModel) arguments.getSerializable(OrderInfoModel.class.getSimpleName());
+            tvOrderInfo.setText(currentOrder.toString());
 
-    public void refreshScreen(){
-
-        if (tempFlag==1){
-            tvNoOrdersText.setVisibility(View.INVISIBLE);
 
         }
-        else if (tempFlag==0) {
-            tvNoOrdersText.setVisibility(View.VISIBLE);
-            tvOrderText.setVisibility(View.INVISIBLE);
-            tvOrderInfoText.setVisibility(View.INVISIBLE);
-            tvTimeText.setVisibility(View.INVISIBLE);
-            tvTime.setVisibility(View.INVISIBLE);
-            btnStart.setVisibility(View.INVISIBLE);
-            btnEnd.setVisibility(View.INVISIBLE);
-        }
-
-
-
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanseState) {

@@ -4,11 +4,8 @@
     <string name="hintLogin">Логин</string>
     <string name="hintPassword">Пароль</string>
     <string name="btnsEnter">Вход</string>
-    <string name="attempts">Попыток:</string>
-    <string name="loginIsLocked">Логин заблокирован</string>
-    <string name="order_text">Информация о заказе</string>
     <string name="button_start">Начать выполнение</string>
     <string name="button_end">Завершить выполнение</string>
     <string name="time_text">Время выполнения</string>
-    <string name="no_orders">Нет заказов</string>
+    <string name="welcome_string">Ваш сантехник</string>
 </resources>

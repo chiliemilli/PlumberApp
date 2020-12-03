@@ -33,36 +33,6 @@
         android:layout_centerHorizontal="true"
         android:text="@string/btnsEnter" />
 
-    <TextView
-        android:id="@+id/tvAttempts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edtEnterPassword"
-        android:layout_marginTop="25dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible"
-        android:text="@string/attempts"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-    <TextView
-        android:id="@+id/tvNumberOfAttempts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edtEnterPassword"
-        android:layout_toRightOf="@id/tvAttempts"
-        android:layout_marginTop="25dp"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/tvLoginIsLocked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="invisible"
-        android:layout_below="@id/tvAttempts"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:text="TextView" />
 
     <TextView
         android:id="@+id/tvLoginText"
@@ -70,7 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="150dp"
-        android:text="@string/tvEnter" />
+
+        android:text="@string/tvEnter"
+        android:textSize="24sp" />
 
     <EditText
         android:id="@+id/edtEnterLogin"
@@ -81,6 +53,16 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="@string/hintLogin" />
+
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="138dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="38dp"
+        android:text="Test" />
 
 
 </RelativeLayout>

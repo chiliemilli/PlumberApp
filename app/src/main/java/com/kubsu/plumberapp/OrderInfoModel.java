@@ -1,5 +1,7 @@
 package com.kubsu.plumberapp;
 
+import java.io.Serializable;
+
 enum OrderStatus {
     DEFAULT, // 2
     SEEN,  // 3 просмотрел
@@ -8,13 +10,32 @@ enum OrderStatus {
     ERROR
 }
 
-class OrderInfo {
+class OrderInfoModel implements Serializable {
 
     private String orderType;
     private String orderDescription;
-    private String address;
+    private String orderAddress;
     private String phoneNumber;
-    private int payment;
+    private String orderPrice;
+    private int orderId;
+    private boolean noOrder;
+
+    public boolean isNoOrder() {
+        return noOrder;
+    }
+
+    public void setNoOrder(boolean noOrder) {
+        this.noOrder = noOrder;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
     private OrderStatus status;
 
     public void setStatus(int statusId) {
@@ -52,12 +73,12 @@ class OrderInfo {
         this.orderDescription = orderDescription;
     }
 
-    public String getAddress() {
-        return address;
+    public String getOrderAddress() {
+        return orderAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setOrderAddress(String address) {
+        this.orderAddress = address;
     }
 
     public String getPhoneNumber() {
@@ -68,11 +89,11 @@ class OrderInfo {
         this.phoneNumber = phoneNumber;
     }
 
-    public int getPayment() {
-        return payment;
+    public String getOrderPrice() {
+        return orderPrice;
     }
 
-    public void setPayment(int payment) {
-        this.payment = payment;
+    public void setOrderPrice(String payment) {
+        this.orderPrice = payment;
     }
 }
