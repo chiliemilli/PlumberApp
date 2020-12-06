@@ -20,11 +20,8 @@ import java.util.Map;
 
 class VolleyRestAPIRequester {
 
-
-    private static final String TAG="error";
     public static final String QUERY_FOR_PLUMBER_ENTRY ="http://10.0.0.10:8080/Plumbers?task=auth&mode=2&login=";
-
-
+    public static final String DEFAULT_QUERY ="http://10.0.0.10:8080/Plumbers";
 
     public interface OrderInfoCallback {
         void onError(String message);
@@ -38,6 +35,8 @@ class VolleyRestAPIRequester {
         String url=QUERY_FOR_PLUMBER_ENTRY+login+"&password="+password;
        final  OrderInfoModel currentOrder=new OrderInfoModel();
 
+
+
         StringRequest request= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -45,18 +44,25 @@ class VolleyRestAPIRequester {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                        JSONObject orderInfoJSON=jsonObject.getJSONObject("order_info");
-                        JSONArray orderInfoList=orderInfoJSON.getJSONArray("data");
-                        JSONObject currentOrderJSON=(JSONObject) orderInfoList.get(0);
+                    if (!jsonObject.optString("order_id").equals("0")) {
 
+                        JSONObject orderInfoJSON = jsonObject.getJSONObject("order_info");
+                        JSONArray orderInfoList = orderInfoJSON.getJSONArray("data");
+                        JSONObject currentOrderJSON = (JSONObject) orderInfoList.get(0);
+
+                        currentOrder.setPlumberID(jsonObject.getInt("ID"));
                         currentOrder.setOrderId(currentOrderJSON.getInt("ORDER_INFO_ID"));
                         currentOrder.setOrderType(currentOrderJSON.getString("ORDER_TYPE"));
                         currentOrder.setOrderDescription(currentOrderJSON.getString("ORDER_DESCRIPTION"));
                         currentOrder.setOrderPrice(currentOrderJSON.getString("ORDER_PRICE"));
                         currentOrder.setPhoneNumber(currentOrderJSON.getLong("CUSTOMER_PHONE"));
                         currentOrder.setOrderAddress(currentOrderJSON.getString("CUSTOMER_ADDRESS"));
-                        orderInfoCallback.onResponse(currentOrder);
-
+                        currentOrder.setOrderStatus(true);
+                    }
+                    else{
+                       currentOrder.setOrderStatus(false);
+                    }
+                    orderInfoCallback.onResponse(currentOrder);
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
@@ -65,7 +71,6 @@ class VolleyRestAPIRequester {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
-
             }
     });
 
@@ -74,23 +79,11 @@ class VolleyRestAPIRequester {
     }
 
 
-
-
-    //Plumber's regiastration
+    //Plumber's regiastration НЕ РЕАЛИЗОВАНА
     public void registrationRequest(final Context context, final String login, final String password){
 
         List<OrderInfoModel> orderInfoModel=new ArrayList<>();
         String url=QUERY_FOR_PLUMBER_ENTRY;
-
-//       JSONObject requestBody=new JSONObject();
-//        try {
-//            requestBody.put("task", "auth");
-//            requestBody.put("login", login);
-//            requestBody.put("password", password);
-//            requestBody.put("mode", "2");
-//        }catch (JSONException e){
-//            e.printStackTrace();
-//        }
 
         Map<String,String> params=new HashMap<>();
             params.put("task", "reg");
@@ -117,4 +110,60 @@ class VolleyRestAPIRequester {
 
     }
 
+    //смена статуса заказа
+    public void changeOrderStatus(final Context context, final String status, final String date, final int orderId, final int plumberID){
+
+        String url= DEFAULT_QUERY;
+        final String orderIDString=String.valueOf(orderId);
+        final String plumberIDString=String.valueOf(plumberID);
+
+        Map<String,String> params=new HashMap<>();
+         params.put("task","action");
+         params.put("action", status);
+         params.put("date", date);
+         params.put("order_id", orderIDString);
+         params.put("plumber_id",plumberIDString);
+
+        JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        MySingleton.getInstance(context).addToRequestQueue(request);
+
+    }
+
+    //выход сантехника
+    public void exitPlumber(final Context context, final int plumberID, final String plumberStatus){
+
+        String url=DEFAULT_QUERY;
+        final String plumberIDString=String.valueOf(plumberID);
+
+
+        Map<String,String> params=new HashMap<>();
+        params.put("task","disconnect");
+        params.put("plumber_id", plumberIDString);
+        params.put("status", plumberStatus);
+
+        JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+    }
 }

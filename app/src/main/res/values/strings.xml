@@ -6,6 +6,9 @@
     <string name="btnsEnter">Вход</string>
     <string name="button_start">Начать выполнение</string>
     <string name="button_end">Завершить выполнение</string>
-    <string name="time_text">Время выполнения</string>
     <string name="welcome_string">Ваш сантехник</string>
+    <string name="no_order">Нет заказов</string>
+
+
+
 </resources>
