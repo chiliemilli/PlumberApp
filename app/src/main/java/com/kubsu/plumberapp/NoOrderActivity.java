@@ -13,6 +13,9 @@ public class NoOrderActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private final VolleyRestAPIRequester volleyRestAPIRequester=new VolleyRestAPIRequester();
+    private PlumberDataModel plumberDataModel;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +26,7 @@ public class NoOrderActivity extends AppCompatActivity {
 
         Bundle arguments = getIntent().getExtras();
         assert arguments != null;
-        final OrderInfoModel currentOrder = (OrderInfoModel) arguments.getSerializable(OrderInfoModel.class.getSimpleName());
-        assert currentOrder != null;
+        plumberDataModel = (PlumberDataModel) arguments.getSerializable(PlumberDataModel.class.getSimpleName());
 
     }
 
@@ -38,6 +40,8 @@ public class NoOrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.exit:
+                FileHolder.clearFile(this);
+                volleyRestAPIRequester.exitPlumber(this,(int) plumberDataModel.getPlumberID(), plumberDataModel.getPlumberStatus());
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();

@@ -7,6 +7,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -51,5 +53,34 @@ class FileHolder {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static void clearFile(Context context){
+
+        try{
+            FileOutputStream fileHolder=context.openFileOutput("LoginPasswordDetails.txt", Context.MODE_PRIVATE);
+            fileHolder.write("".getBytes());
+            fileHolder.close();
+            Toast.makeText(context, "Text deleted", Toast.LENGTH_SHORT).show();
+
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean emptyFile(Context context) throws IOException {
+        FileInputStream fileHolder=context.openFileInput("LoginPasswordDetails.txt");
+        InputStreamReader reader=new InputStreamReader(fileHolder);
+        BufferedReader bufferedReader=new BufferedReader(reader);
+
+        String emptyLine=bufferedReader.readLine();
+        if (emptyLine==""){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

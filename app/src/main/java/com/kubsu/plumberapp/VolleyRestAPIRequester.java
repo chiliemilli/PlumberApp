@@ -25,8 +25,7 @@ class VolleyRestAPIRequester {
 
     public interface OrderInfoCallback {
         void onError(String message);
-        void onResponse(OrderInfoModel orderInfoModel);
-
+        void onResponse(OrderInfoModel orderInfoModel, PlumberDataModel plumberDataModel);
     }
 
     //Plumber's entry
@@ -34,13 +33,13 @@ class VolleyRestAPIRequester {
 
         String url=QUERY_FOR_PLUMBER_ENTRY+login+"&password="+password;
        final  OrderInfoModel currentOrder=new OrderInfoModel();
-
+       final PlumberDataModel plumberDataModel=new PlumberDataModel();
 
 
         StringRequest request= new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
+              //  Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
@@ -50,7 +49,6 @@ class VolleyRestAPIRequester {
                         JSONArray orderInfoList = orderInfoJSON.getJSONArray("data");
                         JSONObject currentOrderJSON = (JSONObject) orderInfoList.get(0);
 
-                        currentOrder.setPlumberID(jsonObject.getInt("ID"));
                         currentOrder.setOrderId(currentOrderJSON.getInt("ORDER_INFO_ID"));
                         currentOrder.setOrderType(currentOrderJSON.getString("ORDER_TYPE"));
                         currentOrder.setOrderDescription(currentOrderJSON.getString("ORDER_DESCRIPTION"));
@@ -58,11 +56,18 @@ class VolleyRestAPIRequester {
                         currentOrder.setPhoneNumber(currentOrderJSON.getLong("CUSTOMER_PHONE"));
                         currentOrder.setOrderAddress(currentOrderJSON.getString("CUSTOMER_ADDRESS"));
                         currentOrder.setOrderStatus(true);
+
+
+                        plumberDataModel.setPlumberID(jsonObject.getInt("ID"));
+                        plumberDataModel.setPlumberStatus("working");
                     }
                     else{
-                       currentOrder.setOrderStatus(false);
+                       plumberDataModel.setPlumberStatus("online");
                     }
-                    orderInfoCallback.onResponse(currentOrder);
+                    //Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                    orderInfoCallback.onResponse(currentOrder, plumberDataModel);
+
+
                 }catch (JSONException e){
                     e.printStackTrace();
                 }

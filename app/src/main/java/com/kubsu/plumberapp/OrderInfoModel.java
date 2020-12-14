@@ -12,25 +12,7 @@ class OrderInfoModel implements Serializable {
     private String orderPrice;
     private int orderId;
     private boolean orderStatus;
-    private int plumberID;
-    private String plumberStatus;
 
-    public String getPlumberStatus() {
-        return plumberStatus;
-    }
-
-    public void setPlumberStatus(String plumberStatus) {
-        this.plumberStatus = plumberStatus;
-    }
-
-
-    public int getPlumberID() {
-        return plumberID;
-    }
-
-    public void setPlumberID(int plumberID) {
-        this.plumberID = plumberID;
-    }
 
     public boolean isOrderStatus() {
         return orderStatus;
@@ -54,10 +36,10 @@ class OrderInfoModel implements Serializable {
 
     @Override
     public String toString() {
-        return  "Тип заказа: " + orderType  +"\n"+
-                "Описание заказа: " + orderDescription + "\n"+
-                "Адрес заказчика: " + orderAddress + "\n"+
-                "Тел. номер заказчика: " + phoneNumber +"\n"+
+        return  "Тип заказа: " + orderType  +"\n"+"\n"+
+                "Описание заказа: " + orderDescription + "\n"+"\n"+
+                "Адрес заказчика: " + orderAddress + "\n"+"\n"+
+                "Тел. номер заказчика: " + phoneNumber +"\n"+"\n"+
                 "Стоимость: " + orderPrice ;
     }
 
