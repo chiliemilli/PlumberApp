@@ -16,8 +16,8 @@ import java.io.IOException;
 public class LoginActivity extends AppCompatActivity {
 
 
-    private EditText etUsername;
-    private EditText etPassword;
+    static EditText etUsername;
+    static EditText etPassword;
     private Button btnLogin;
     private  final VolleyRestAPIRequester restAPIRequester=new VolleyRestAPIRequester();
 

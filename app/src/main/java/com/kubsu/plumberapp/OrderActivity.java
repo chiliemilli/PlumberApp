@@ -17,6 +17,8 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class OrderActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class OrderActivity extends AppCompatActivity {
     private boolean running;
     private Button btnStart;
     private Button btnEnd;
+    private Button btnRead;
     private TextView tvOrderInfo;
    private OrderInfoModel currentOrder;
     private final VolleyRestAPIRequester volleyRestAPIRequester=new VolleyRestAPIRequester();
@@ -35,7 +38,7 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
-
+      //  startService(new Intent(this,GetService.class));
 //        String[] loginDetails=FileHolder.getLoginPasswordFromFile(this);
 //        login=loginDetails[0];
 //        password=loginDetails[1];
@@ -60,8 +63,18 @@ public class OrderActivity extends AppCompatActivity {
             plumber=(PlumberDataModel)savedInstanceState.getSerializable("plumber");
         }
 
-        //прочитать заказ
-        readOrder(currentOrder);
+
+
+
+        btnRead=  (Button) findViewById(R.id.btnStart2);
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                readOrder(currentOrder);
+                btnRead.setEnabled(false);
+
+            }
+        });
 
 
         //начать выполнение заказа
@@ -86,18 +99,55 @@ public class OrderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Date dateNow=new Date();
+                btnEnd.setEnabled(false);
                 SimpleDateFormat formaterDate= new SimpleDateFormat("dd.MM.yy hh.mm.ss", Locale.US);
                 plumber.setPlumberStatus("online");
                 volleyRestAPIRequester.changeOrderStatus(OrderActivity.this, "end",formaterDate.format(dateNow), currentOrder.getOrderId(),plumber.getPlumberID());
-                Intent intent=new Intent(OrderActivity.this,NoOrderActivity.class);
-                Bundle extras=new Bundle();
-                extras.putSerializable(OrderInfoModel.class.getSimpleName(),currentOrder);
-                extras.putSerializable(PlumberDataModel.class.getSimpleName(), plumber);
-                intent.putExtras(extras);
-                startActivity(intent);
-                finish();
+
+//                Intent intent=new Intent(OrderActivity.this,NoOrderActivity.class);
+//                Bundle extras=new Bundle();
+//                extras.putSerializable(OrderInfoModel.class.getSimpleName(),currentOrder);
+//                extras.putSerializable(PlumberDataModel.class.getSimpleName(), plumber);
+//                intent.putExtras(extras);
+//                startActivity(intent);
+//                finish();
             }
         });
+
+        Timer timer=new Timer();
+        TimerTask timerTask=new TimerTask() {
+            @Override
+            public void run() {
+
+                String[] data = FileHolder.getLoginPasswordFromFile(OrderActivity.this);
+                final String username=data[0];
+                final String password=data[1];
+                volleyRestAPIRequester.getOrderInfoByLogin(OrderActivity.this,username,password, new VolleyRestAPIRequester.OrderInfoCallback() {
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(OrderActivity.this, "Error click", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(OrderInfoModel orderInfoModel, PlumberDataModel plumberDataModel) {
+
+                        if (!orderInfoModel.isOrderStatus()){
+
+                            Intent intent=new Intent(OrderActivity.this,NoOrderActivity.class);
+
+                           // Bundle extras=new Bundle();
+//                            extras.putSerializable(OrderInfoModel.class.getSimpleName(),orderInfoModel);
+//                            extras.putSerializable(PlumberDataModel.class.getSimpleName(), plumberDataModel);
+         //                   intent.putExtras(extras);
+                            intent.putExtra(PlumberDataModel.class.getSimpleName(), plumberDataModel);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(timerTask,0,10000);
     }
 
    public  void readOrder(OrderInfoModel currentOrder){

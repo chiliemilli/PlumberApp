@@ -22,7 +22,7 @@ class FileHolder {
             FileOutputStream fileHolder=context.openFileOutput("LoginPasswordDetails.txt", Context.MODE_PRIVATE);
             fileHolder.write(stringToWrite.getBytes());
             fileHolder.close();
-            Toast.makeText(context, "Text saved", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Text saved", Toast.LENGTH_SHORT).show();
 
         }catch (FileNotFoundException e){
             e.printStackTrace();
@@ -61,7 +61,7 @@ class FileHolder {
             FileOutputStream fileHolder=context.openFileOutput("LoginPasswordDetails.txt", Context.MODE_PRIVATE);
             fileHolder.write("".getBytes());
             fileHolder.close();
-            Toast.makeText(context, "Text deleted", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(context, "Text deleted", Toast.LENGTH_SHORT).show();
 
         }catch (FileNotFoundException e){
             e.printStackTrace();

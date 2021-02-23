@@ -12,7 +12,15 @@ class OrderInfoModel implements Serializable {
     private String orderPrice;
     private int orderId;
     private boolean orderStatus;
+    private String orderWorkingStatus;
 
+    public void setOrderWorkingStatus(String orderWorkingStatus) {
+        this.orderWorkingStatus = orderWorkingStatus;
+    }
+
+    public String getOrderWorkingStatus() {
+        return orderWorkingStatus;
+    }
 
     public boolean isOrderStatus() {
         return orderStatus;

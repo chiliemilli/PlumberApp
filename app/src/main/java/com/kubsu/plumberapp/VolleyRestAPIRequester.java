@@ -20,8 +20,10 @@ import java.util.Map;
 
 class VolleyRestAPIRequester {
 
-    public static final String QUERY_FOR_PLUMBER_ENTRY ="http://10.0.0.10:8080/Plumbers?task=auth&mode=2&login=";
-    public static final String DEFAULT_QUERY ="http://10.0.0.10:8080/Plumbers";
+   //public static final String QUERY_FOR_PLUMBER_ENTRY ="http://10.0.0.10:8080/Plumbers?task=auth&mode=2&login=";
+    //public static final String DEFAULT_QUERY ="http://10.0.0.10:8080/Plumbers";
+  public static final String QUERY_FOR_PLUMBER_ENTRY ="http://192.168.43.12:8080/Plumbers?task=auth&mode=2&login=";
+    public static final String DEFAULT_QUERY ="http://192.168.43.12:8080/Plumbers";
 
     public interface OrderInfoCallback {
         void onError(String message);
@@ -49,22 +51,29 @@ class VolleyRestAPIRequester {
                         JSONArray orderInfoList = orderInfoJSON.getJSONArray("data");
                         JSONObject currentOrderJSON = (JSONObject) orderInfoList.get(0);
 
+                        JSONObject forStatus=jsonObject.getJSONObject("order");
+                        JSONArray forStatusArray=forStatus.getJSONArray("data");
+                        JSONObject currentOrderStatus = (JSONObject) forStatusArray.get(0);
+
                         currentOrder.setOrderId(currentOrderJSON.getInt("ORDER_INFO_ID"));
                         currentOrder.setOrderType(currentOrderJSON.getString("ORDER_TYPE"));
                         currentOrder.setOrderDescription(currentOrderJSON.getString("ORDER_DESCRIPTION"));
                         currentOrder.setOrderPrice(currentOrderJSON.getString("ORDER_PRICE"));
                         currentOrder.setPhoneNumber(currentOrderJSON.getLong("CUSTOMER_PHONE"));
                         currentOrder.setOrderAddress(currentOrderJSON.getString("CUSTOMER_ADDRESS"));
+
+                        currentOrder.setOrderWorkingStatus(currentOrderStatus.getString("ORDER_STATUS"));
                         currentOrder.setOrderStatus(true);
 
 
                         plumberDataModel.setPlumberID(jsonObject.getInt("ID"));
-                        plumberDataModel.setPlumberStatus("working");
+
                     }
                     else{
                        plumberDataModel.setPlumberStatus("online");
+                        plumberDataModel.setPlumberID(jsonObject.getInt("ID"));
                     }
-                    //Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
                     orderInfoCallback.onResponse(currentOrder, plumberDataModel);
 
 
@@ -75,7 +84,7 @@ class VolleyRestAPIRequester {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
             }
     });
 
@@ -101,12 +110,12 @@ class VolleyRestAPIRequester {
             @Override
             public void onResponse(JSONObject response) {
 
-                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -132,12 +141,12 @@ class VolleyRestAPIRequester {
         JsonObjectRequest request= new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, "Error"+error.toString(), Toast.LENGTH_LONG).show();
 
             }
         });
@@ -161,7 +170,7 @@ class VolleyRestAPIRequester {
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params), new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -169,6 +178,8 @@ class VolleyRestAPIRequester {
 
             }
         });
+
+        MySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 }

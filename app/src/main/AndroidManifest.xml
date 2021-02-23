@@ -12,13 +12,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NoOrderActivity"
-           >
-        </activity>
+        <service
+            android:name=".GetService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+
+        <activity android:name=".NoOrderActivity"></activity>
         <activity
             android:name=".WelcomeActivity"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,8 +39,8 @@
         </activity>
         <activity
             android:name=".OrderActivity"
-            android:screenOrientation="portrait"
-            android:label="Информация о заказе"/>
+            android:label="Информация о заказе"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
